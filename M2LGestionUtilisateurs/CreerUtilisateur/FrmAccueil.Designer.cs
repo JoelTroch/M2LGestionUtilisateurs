@@ -47,6 +47,7 @@
             this.btnInserer.TabIndex = 0;
             this.btnInserer.Text = "Inserer";
             this.btnInserer.UseVisualStyleBackColor = true;
+            this.btnInserer.Click += new System.EventHandler(this.btnInserer_Click);
             // 
             // txtBoxNiveau
             // 
