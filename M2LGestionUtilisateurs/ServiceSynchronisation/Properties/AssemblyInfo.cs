@@ -6,11 +6,11 @@ using System.Resources;
 // Les informations générales relatives à un assembly dépendent de 
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
-[assembly: AssemblyTitle("Service de syncronisation")]
-[assembly: AssemblyDescription("Service de syncronisation")]
+[assembly: AssemblyTitle("Service de synchronisation")]
+[assembly: AssemblyDescription("Service de synchronisation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SEUX Maxime et TROCH Joël")]
-[assembly: AssemblyProduct("Service de syncronisation")]
+[assembly: AssemblyProduct("Service de synchronisation")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("Maison des Ligues de Lorraine")]
 [assembly: AssemblyCulture("")]

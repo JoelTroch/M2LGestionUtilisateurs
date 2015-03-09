@@ -1,4 +1,4 @@
-﻿namespace ServiceSyncronisation
+﻿namespace ServiceSynchronisation
 {
     partial class ServiceMain
     {

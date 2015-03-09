@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransfertBDDVersAD", "Trans
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreerUtilisateur", "CreerUtilisateur\CreerUtilisateur.csproj", "{4C2DFB44-A1A2-456C-90DF-D119DBCF2B9E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceSyncronisation", "ServiceSyncronisation\ServiceSyncronisation.csproj", "{52FC2A68-BE20-43CE-A2D9-1D896B6A5FBE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceSynchronisation", "ServiceSynchronisation\ServiceSynchronisation.csproj", "{52FC2A68-BE20-43CE-A2D9-1D896B6A5FBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
