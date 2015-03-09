@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -14,13 +15,25 @@ namespace TransfertBDDVersAD
             string repertoireActuel = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             Config configuration = new Config(repertoireActuel + "\\config.ini");
 
-            // Connection base de données
+            // Connection à la base de données
             MySqlConnection bddConnection = new MySqlConnection("SERVER=" + configuration.lire("host", "localhost") +
                 ";DATABASE=" + configuration.lire("database", "mrbs") + ";UID=" + configuration.lire("user", "mrbs") +
                 ";PASSWORD=" + configuration.lire("password", "mrbs"));
             try
             {
                 bddConnection.Open();
+
+                // Récupération de tous les utilisateurs
+                List<Utilisateur> listeUtilisateurs = new List<Utilisateur>();
+                string bddSQLRecupererUtilisateurs = "SELECT * FROM mrbs_users";
+                MySqlCommand bddCmdRecupererUtilisateurs = new MySqlCommand(bddSQLRecupererUtilisateurs, bddConnection);
+                MySqlDataReader bddDataReaderRecupererUtilisateurs = bddCmdRecupererUtilisateurs.ExecuteReader();
+                while (bddDataReaderRecupererUtilisateurs.Read())
+                    listeUtilisateurs.Add(new Utilisateur(Convert.ToInt32(bddDataReaderRecupererUtilisateurs["id"]),
+                        Convert.ToInt32(bddDataReaderRecupererUtilisateurs["level"]),
+                        bddDataReaderRecupererUtilisateurs["name"].ToString(),
+                        bddDataReaderRecupererUtilisateurs["password"].ToString(),
+                        bddDataReaderRecupererUtilisateurs["email"].ToString()));
 
                 bddConnection.Close();
             }
