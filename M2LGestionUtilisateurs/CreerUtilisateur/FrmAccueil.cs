@@ -28,7 +28,7 @@ namespace CreerUtilisateur
                 try
                 {
                     //Connexion au LDAP
-                    DirectoryEntry Ldap = new DirectoryEntry("LDAP://172.16.0.2/OU=userM2L", "Administrateur", "Thoughtpolice2008");
+                    DirectoryEntry Ldap = new DirectoryEntry("LDAP://169.254.36.173/OU=usersM2L,DC=m2l,DC=fr", "Administrateur", "Thoughtpolice2008");
 
                     string login = txtBoxLogin.Text;
                     string motDePasse = txtBoxMotDePasse.Text;
@@ -38,8 +38,8 @@ namespace CreerUtilisateur
                     user.Properties["SAMAccountName"].Add(login); //Login
                     user.Properties["mail"].Add(email); //Email
                     user.CommitChanges();
-                    user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
-                    user.Properties["userAccountControl"].Value = 0x0200;
+                    //user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
+                    user.Properties["userAccountControl"].Value = 0x0020;
                     user.CommitChanges();
                     MessageBox.Show("Ajout à l'AD avec succès.", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
