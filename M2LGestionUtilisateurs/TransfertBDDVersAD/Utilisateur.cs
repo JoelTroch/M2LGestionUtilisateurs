@@ -20,5 +20,31 @@ namespace TransfertBDDVersAD
             this.motDePasse = motDePasse;
             this.email = email;
         }
+
+        // Accesseurs
+        public int getId()
+        {
+            return this.id;
+        }
+
+        public int getNiveau()
+        {
+            return this.niveau;
+        }
+
+        public string getNom()
+        {
+            return this.nom;
+        }
+
+        public string getMotDePasse()
+        {
+            return this.motDePasse;
+        }
+        
+        public string getEmail()
+        {
+            return this.email;
+        }
     }
 }
