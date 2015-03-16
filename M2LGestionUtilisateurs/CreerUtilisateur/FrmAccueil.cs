@@ -19,18 +19,26 @@ namespace CreerUtilisateur
 
         private void btnInserer_Click(object sender, EventArgs e)
         {
-            try
+            if (txtBoxLogin.Text == "" || txtBoxMotDePasse.Text == "" || txtBoxEmail.Text == "" )
             {
-
-                DirectoryEntry Ldap = new DirectoryEntry("LDAP://votre-nom-AD", "Login", "Password");
-
+                MessageBox.Show(this, "Veuillez remplir les informations", "Veuillez remplir toutes les informations !", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-
-            catch (Exception Ex)
+            else
             {
+                //Connexion au LDAP
+                DirectoryEntry Ldap = new DirectoryEntry("LDAP://172.16.0.2/OU=userM2L", "Administrateur", "Thoughtpolice2008");
 
-                Console.WriteLine(Ex.Message);
+                string login = txtBoxLogin.Text;
+                string motDePasse = txtBoxMotDePasse.Text;
+                string email = txtBoxEmail.Text;
 
+                DirectoryEntry user = Ldap.Children.Add("cn=" + login, "user");
+                user.Properties["SAMAccountName"].Add(login); //Login
+                user.Properties["mail"].Add(email); //Email
+                user.CommitChanges();
+                user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
+                user.Properties["userAccountControl"].Value = 0x0200;
+                user.CommitChanges();
             }
         }
     }
