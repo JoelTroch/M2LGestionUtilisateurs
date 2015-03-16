@@ -16,9 +16,10 @@ namespace TransfertBDDVersAD
             Config configuration = new Config(repertoireActuel + "\\config.ini");
 
             // Connection à la base de données
-            MySqlConnection bddConnection = new MySqlConnection("SERVER=" + configuration.lire("host", "localhost") +
-                ";DATABASE=" + configuration.lire("database", "mrbs") + ";UID=" + configuration.lire("user", "mrbs") +
-                ";PASSWORD=" + configuration.lire("password", "mrbs"));
+            MySqlConnection bddConnection = new MySqlConnection("SERVER=" + configuration.lire("mysql", "host", "localhost") +
+                ";DATABASE=" + configuration.lire("mysql", "database", "mrbs") + ";UID=" + configuration.lire("mysql", "user", "mrbs") +
+                ";PASSWORD=" + configuration.lire("mysql", "password", "mrbs"));
+            List<Utilisateur> listeUtilisateurs = new List<Utilisateur>();
             try
             {
                 bddConnection.Open();

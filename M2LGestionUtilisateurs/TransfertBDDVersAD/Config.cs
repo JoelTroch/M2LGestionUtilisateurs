@@ -20,15 +20,16 @@ namespace TransfertBDDVersAD
             this.fichier = fichier;
         }
 
-        public void ecrire(string cle, string valeur)
+        // Méthodes
+        public void ecrire(string section, string cle, string valeur)
         {
-            WritePrivateProfileString("mysql", cle, valeur, this.fichier);
+            WritePrivateProfileString(section, cle, valeur, this.fichier);
         }
 
-        public string lire(string cle, string defaut)
+        public string lire(string section, string cle, string defaut)
         {
             StringBuilder constructeur = new StringBuilder(255);
-            int i = GetPrivateProfileString("mysql", cle, defaut, constructeur, 255, this.fichier);
+            int i = GetPrivateProfileString(section, cle, defaut, constructeur, 255, this.fichier);
             return constructeur.ToString();
         }
     }
