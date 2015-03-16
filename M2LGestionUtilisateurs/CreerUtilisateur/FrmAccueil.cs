@@ -25,20 +25,28 @@ namespace CreerUtilisateur
             }
             else
             {
-                //Connexion au LDAP
-                DirectoryEntry Ldap = new DirectoryEntry("LDAP://172.16.0.2/OU=userM2L", "Administrateur", "Thoughtpolice2008");
+                try
+                {
+                    //Connexion au LDAP
+                    DirectoryEntry Ldap = new DirectoryEntry("LDAP://172.16.0.2/OU=userM2L", "Administrateur", "Thoughtpolice2008");
 
-                string login = txtBoxLogin.Text;
-                string motDePasse = txtBoxMotDePasse.Text;
-                string email = txtBoxEmail.Text;
+                    string login = txtBoxLogin.Text;
+                    string motDePasse = txtBoxMotDePasse.Text;
+                    string email = txtBoxEmail.Text;
 
-                DirectoryEntry user = Ldap.Children.Add("cn=" + login, "user");
-                user.Properties["SAMAccountName"].Add(login); //Login
-                user.Properties["mail"].Add(email); //Email
-                user.CommitChanges();
-                user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
-                user.Properties["userAccountControl"].Value = 0x0200;
-                user.CommitChanges();
+                    DirectoryEntry user = Ldap.Children.Add("cn=" + login, "user");
+                    user.Properties["SAMAccountName"].Add(login); //Login
+                    user.Properties["mail"].Add(email); //Email
+                    user.CommitChanges();
+                    user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
+                    user.Properties["userAccountControl"].Value = 0x0200;
+                    user.CommitChanges();
+                    MessageBox.Show("Ajout à l'AD avec succès.", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                catch (Exception erreur)
+                {
+                    MessageBox.Show(erreur.Message, "Erreur lors de l'ajout à l'AD", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
