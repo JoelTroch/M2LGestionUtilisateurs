@@ -49,7 +49,7 @@ namespace TransfertBDDVersAD
                 try
                 {
                     // Connexion au LDAP
-                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://172.16.0.2/OU=usersM2L", "Administrateur", "Thoughtpolice2008");
+                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://169.254.36.173/OU=usersM2L,DC=m2l,DC=fr", "Administrateur", "Thoughtpolice2008");
                     DirectorySearcher ldapRecherche = new DirectorySearcher(ldapServeur);
                     ldapRecherche.Filter = "(objectClass=user)";
                     SearchResultCollection ldapResultat = ldapRecherche.FindAll();
@@ -74,6 +74,9 @@ namespace TransfertBDDVersAD
                                     listeUtilisateurs.RemoveAt(i);
                                     ok = true;
                                 }
+                                else
+                                    i++;
+                            }
                             }
                         }
                     }
