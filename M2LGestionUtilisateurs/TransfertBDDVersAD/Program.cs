@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.DirectoryServices;
 using System.IO;
 using System.Reflection;
 using System.Windows.Forms;
@@ -25,7 +26,6 @@ namespace TransfertBDDVersAD
                 bddConnection.Open();
 
                 // Récupération de tous les utilisateurs
-                List<Utilisateur> listeUtilisateurs = new List<Utilisateur>();
                 string bddSQLRecupererUtilisateurs = "SELECT * FROM mrbs_users";
                 MySqlCommand bddCmdRecupererUtilisateurs = new MySqlCommand(bddSQLRecupererUtilisateurs, bddConnection);
                 MySqlDataReader bddDataReaderRecupererUtilisateurs = bddCmdRecupererUtilisateurs.ExecuteReader();
@@ -40,8 +40,51 @@ namespace TransfertBDDVersAD
             }
             catch (Exception erreur)
             {
-                MessageBox.Show(erreur.Message, "Erreur lors de la connection à la base de données", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(erreur.Message, "Erreur lors avec la base de données", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
+            // Il y a du traitement à faire
+            if (listeUtilisateurs.Count > 0)
+            {
+                try
+                {
+                    // Connexion au LDAP
+                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://172.16.0.2/OU=usersM2L", "Administrateur", "Thoughtpolice2008");
+                    DirectorySearcher ldapRecherche = new DirectorySearcher(ldapServeur);
+                    ldapRecherche.Filter = "(objectClass=user)";
+                    SearchResultCollection ldapResultat = ldapRecherche.FindAll();
+                    if (ldapResultat.Count > 0)
+                    {
+                        foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
+                        {
+                            // Récupération des infos utilisateur
+                            DirectoryEntry ldapUtilisateur = ldapUtilisateurActuel.GetDirectoryEntry();
+                            string ldapNom = ldapUtilisateur.Properties["sn"].Value.ToString();
+                            string ldapPrenom = ldapUtilisateur.Properties["givenName"].Value.ToString();
+                            string ldapEmail = ldapUtilisateur.Properties["mail"].Value.ToString();
+
+                            // On va ordonner les utilisateurs qui ont aucune modification de ne pas les traiter
+                            int i = 0;
+                            bool ok = false;
+                            while (i < listeUtilisateurs.Count && !ok)
+                            {
+                                string bddLogin = ldapNom.ToLower() + ldapPrenom.Substring(0, 1).ToLower();
+                                if (listeUtilisateurs[i].getNom() == bddLogin && listeUtilisateurs[i].getEmail() == ldapEmail)
+                                {
+                                    listeUtilisateurs.RemoveAt(i);
+                                    ok = true;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception erreur)
+                {
+                    MessageBox.Show(erreur.Message, "Erreur avec l\'Active Directory", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+                MessageBox.Show("Aucun utilisateur à traiter.", "Aucun utilisateur à traiter", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
