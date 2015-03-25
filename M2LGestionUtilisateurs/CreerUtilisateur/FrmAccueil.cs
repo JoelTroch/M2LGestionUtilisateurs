@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.DirectoryServices;
+using System.IO;
+using System.Reflection;
 
 namespace CreerUtilisateur
 {
@@ -27,8 +29,11 @@ namespace CreerUtilisateur
             {
                 try
                 {
+                    //Lecture fichier de configuration
+                    string repertoireActuel = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                    Config configuration = new Config(repertoireActuel + "\\config.ini");
                     //Connexion au LDAP
-                    DirectoryEntry Ldap = new DirectoryEntry("LDAP://169.254.36.173/OU=usersM2L,DC=m2l,DC=fr", "Administrateur", "Thoughtpolice2008");
+                    DirectoryEntry Ldap = new DirectoryEntry("LDAP://" + configuration.lire("ldap", "host", "169.254.36.173") + "/OU=usersM2L,DC=m2l,DC=fr", configuration.lire("ldap", "user", "Administrateur"), configuration.lire("ldap", "password", "Thoughtpolice2008"));
 
                     string login = txtBoxLogin.Text;
                     string motDePasse = txtBoxMotDePasse.Text;
