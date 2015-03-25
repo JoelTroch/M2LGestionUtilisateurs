@@ -19,7 +19,7 @@ namespace CreerUtilisateur
 
         private void btnInserer_Click(object sender, EventArgs e)
         {
-            if (txtBoxLogin.Text == "" || txtBoxMotDePasse.Text == "" || txtBoxEmail.Text == "" )
+            if (txtBoxLogin.Text == "" || txtBoxMotDePasse.Text == "" || txtBoxEmail.Text == "")
             {
                 MessageBox.Show(this, "Veuillez remplir les informations", "Veuillez remplir toutes les informations !", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -40,6 +40,7 @@ namespace CreerUtilisateur
                     user.CommitChanges();
                     //user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
                     user.Properties["userAccountControl"].Value = 0x0020;
+                    //user.Properties["userAccountControl"].Value = 0x0200;
                     user.CommitChanges();
                     MessageBox.Show("Ajout à l'AD avec succès.", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
