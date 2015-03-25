@@ -49,11 +49,34 @@ namespace TransfertBDDVersAD
                 try
                 {
                     // Connexion au LDAP
-                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://169.254.36.173/OU=usersM2L,DC=m2l,DC=fr", "Administrateur", "Thoughtpolice2008");
+                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://" + configuration.lire("ldap", "host", "169.254.36.173") + "/OU=usersM2L,DC=m2l,DC=fr", configuration.lire("ldap", "user", "Administrateur"), configuration.lire("ldap", "password", "Thoughtpolice2008"));
+
+                    // Récupération de tous les utilisateurs dans le LDAP
                     DirectorySearcher ldapRecherche = new DirectorySearcher(ldapServeur);
                     ldapRecherche.Filter = "(objectClass=user)";
                     SearchResultCollection ldapResultat = ldapRecherche.FindAll();
-                    if (ldapResultat.Count > 0)
+
+                    // On supprime tous les utilisateurs dans le LDAP
+                    foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
+                    {
+                        DirectoryEntry ldapUtilisateur = ldapUtilisateurActuel.GetDirectoryEntry();
+                        ldapUtilisateur.DeleteTree();
+                        ldapUtilisateur.CommitChanges();
+                    }
+
+                    // Pour ensuite les rajouter dans le LDAP
+                    foreach (Utilisateur unUtilisateur in listeUtilisateurs)
+                    {
+                        DirectoryEntry ldapUtilisateurActuel = ldapServeur.Children.Add("cn=" + unUtilisateur.getNom(), "user");
+                        ldapUtilisateurActuel.Properties["SAMAccountName"].Add(unUtilisateur.getNom());
+                        ldapUtilisateurActuel.Properties["mail"].Add(unUtilisateur.getEmail());
+                        //ldapUtilisateurActuel.Properties["Description"].Add("ID BDD = " + unUtilisateur.getId());
+                        ldapUtilisateurActuel.CommitChanges();
+                        ldapUtilisateurActuel.Properties["userAccountControl"].Value = 0x0020;
+                        ldapUtilisateurActuel.CommitChanges();
+                    }
+
+                    /*if (ldapResultat.Count > 0)
                     {
                         foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
                         {
@@ -63,23 +86,30 @@ namespace TransfertBDDVersAD
                             string ldapPrenom = ldapUtilisateur.Properties["givenName"].Value.ToString();
                             string ldapEmail = ldapUtilisateur.Properties["mail"].Value.ToString();
 
-                            // On va ordonner les utilisateurs qui ont aucune modification de ne pas les traiter
+                            // Traitement des utilisateurs
                             int i = 0;
                             bool ok = false;
                             while (i < listeUtilisateurs.Count && !ok)
                             {
                                 string bddLogin = ldapNom.ToLower() + ldapPrenom.Substring(0, 1).ToLower();
-                                if (listeUtilisateurs[i].getNom() == bddLogin && listeUtilisateurs[i].getEmail() == ldapEmail)
+                                if (listeUtilisateurs[i].getNom() == bddLogin && listeUtilisateurs[i].getEmail() == ldapEmail) // Tout est identique, aucune MAJ à faire
                                 {
+                                    listeUtilisateurs.RemoveAt(i);
+                                    ok = true;
+                                }
+                                else if (listeUtilisateurs[i].getNom() == bddLogin && listeUtilisateurs[i].getEmail() != ldapEmail) // Login identique mais e-mail identique
+                                {
+                                    ldapUtilisateur.Properties["mail"].Value = listeUtilisateurs[i].getEmail();
+                                    ldapUtilisateur.CommitChanges();
                                     listeUtilisateurs.RemoveAt(i);
                                     ok = true;
                                 }
                                 else
                                     i++;
                             }
-                            }
                         }
-                    }
+                    }*/
+                    MessageBox.Show("Tous les utilisateurs de la BDD sont présents dans l'AD.", "Ajout avec succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch (Exception erreur)
                 {
