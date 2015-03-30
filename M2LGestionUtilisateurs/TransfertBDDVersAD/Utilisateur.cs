@@ -41,7 +41,7 @@ namespace TransfertBDDVersAD
         {
             return this.motDePasse;
         }
-        
+
         public string getEmail()
         {
             return this.email;
