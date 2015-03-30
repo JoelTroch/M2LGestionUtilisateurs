@@ -80,12 +80,31 @@ namespace ServiceSynchronisation
                         MySqlCommand bddCommandeNettoyage = new MySqlCommand("DELETE * FROM mrbs_users", bddConnection);
                         bddCommandeNettoyage.ExecuteNonQuery();
 
+                        // Préparation requête SQL
+                        string requete = "INSERT INTO mrbs_users(name, password, email) VALUES";
+                        for (int i = 0; i < listeUtilisateurs.Count; i++)
+                        {
+                            string caractereFinal = ",";
+                            if (i == (listeUtilisateurs.Count - 1))
+                                caractereFinal = ";";
+
+                            requete += "('" + listeUtilisateurs[i].getNom() + "', '" + listeUtilisateurs[i].getMotDePasse() + "', '" +
+                                listeUtilisateurs[i].getEmail() + "')" + caractereFinal;
+                        }
+
+                        // Effectue l'insertion
+                        MySqlCommand bddCommandeInsertion = new MySqlCommand(requete, bddConnection);
+                        bddCommandeInsertion.ExecuteNonQuery();
+
+                        // Terminé
                         bddConnection.Close();
                     }
+                    else
+                        logger.WriteEntry("Aucune insertion doit être effectuée.", EventLogEntryType.Information);
                 }
                 catch (Exception erreur)
                 {
-                    logger.WriteEntry("[LDAP] Erreur, message = " + erreur.Message, EventLogEntryType.Error);
+                    logger.WriteEntry("Erreur, message = " + erreur.Message, EventLogEntryType.Error);
                 }
             }
             else
