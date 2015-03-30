@@ -19,11 +19,19 @@ namespace CreerUtilisateur
             InitializeComponent();
         }
 
+        private void boutonEntree(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Enter)
+            {
+                btnInserer_Click(sender, e);
+            }
+        }
+
         private void btnInserer_Click(object sender, EventArgs e)
         {
             if (txtBoxLogin.Text == "" || txtBoxMotDePasse.Text == "" || txtBoxEmail.Text == "")
             {
-                MessageBox.Show(this, "Veuillez remplir les informations", "Veuillez remplir toutes les informations !", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(this, "Veuillez remplir les informations.", "Veuillez remplir toutes les informations !", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {

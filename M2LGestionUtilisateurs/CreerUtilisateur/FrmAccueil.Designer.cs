@@ -53,13 +53,16 @@
             this.txtBoxLogin.Name = "txtBoxLogin";
             this.txtBoxLogin.Size = new System.Drawing.Size(250, 20);
             this.txtBoxLogin.TabIndex = 3;
+            this.txtBoxLogin.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boutonEntree);
             // 
             // txtBoxMotDePasse
             // 
             this.txtBoxMotDePasse.Location = new System.Drawing.Point(95, 96);
             this.txtBoxMotDePasse.Name = "txtBoxMotDePasse";
+            this.txtBoxMotDePasse.PasswordChar = '*';
             this.txtBoxMotDePasse.Size = new System.Drawing.Size(250, 20);
             this.txtBoxMotDePasse.TabIndex = 4;
+            this.txtBoxMotDePasse.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boutonEntree);
             // 
             // txtBoxEmail
             // 
@@ -67,6 +70,7 @@
             this.txtBoxEmail.Name = "txtBoxEmail";
             this.txtBoxEmail.Size = new System.Drawing.Size(250, 20);
             this.txtBoxEmail.TabIndex = 5;
+            this.txtBoxEmail.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.boutonEntree);
             // 
             // txtLogin
             // 
