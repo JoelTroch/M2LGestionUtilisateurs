@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
@@ -44,13 +45,27 @@ namespace ServiceSynchronisation
         {
             if (configuration != null)
             {
-                // Connexion au LDAP
-                DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://" + configuration.lire("ldap", "host", "169.254.36.173") + "/OU=usersM2L,DC=m2l,DC=fr", configuration.lire("ldap", "user", "Administrateur"), configuration.lire("ldap", "password", "Thoughtpolice2008"));
+                List<Utilisateur> listeUtilisateurs = new List<Utilisateur>();
+                try
+                {
+                    // Connexion au LDAP
+                    DirectoryEntry ldapServeur = new DirectoryEntry("LDAP://" + configuration.lire("ldap", "host", "169.254.36.173") + "/OU=usersM2L,DC=m2l,DC=fr", configuration.lire("ldap", "user", "Administrateur"), configuration.lire("ldap", "password", "Thoughtpolice2008"));
 
-                // Récupération de tous les utilisateurs dans le LDAP
-                DirectorySearcher ldapRecherche = new DirectorySearcher(ldapServeur);
-                ldapRecherche.Filter = "(objectClass=user)";
-                SearchResultCollection ldapResultat = ldapRecherche.FindAll();
+                    // Récupération de tous les utilisateurs dans le LDAP
+                    DirectorySearcher ldapRecherche = new DirectorySearcher(ldapServeur);
+                    ldapRecherche.Filter = "(objectClass=user)";
+                    SearchResultCollection ldapResultat = ldapRecherche.FindAll();
+
+                    // Pour chaque utilisateur dans le LDAP
+                    foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
+                    {
+                        DirectoryEntry ldapUtilisateur = ldapUtilisateurActuel.GetDirectoryEntry();
+                    }
+                }
+                catch (Exception erreur)
+                {
+                    logger.WriteEntry("[LDAP] Erreur, message = " + erreur.Message, EventLogEntryType.Error);
+                }
             }
             else
                 logger.WriteEntry("Pas de pointeur sur la classe configuration !", EventLogEntryType.Error);
