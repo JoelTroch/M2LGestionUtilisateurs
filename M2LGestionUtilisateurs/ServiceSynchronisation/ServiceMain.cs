@@ -6,6 +6,7 @@ using System.IO;
 using System.Reflection;
 using System.ServiceProcess;
 using System.Timers;
+using MySql.Data.MySqlClient;
 
 namespace ServiceSynchronisation
 {
@@ -57,15 +58,29 @@ namespace ServiceSynchronisation
                     SearchResultCollection ldapResultat = ldapRecherche.FindAll();
 
                     // Pour chaque utilisateur dans le LDAP
-                    int id = 0;
                     foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
                     {
                         DirectoryEntry ldapUtilisateur = ldapUtilisateurActuel.GetDirectoryEntry();
                         string userNom = ldapUtilisateur.Properties["SAMAccountName"].Value.ToString();
                         string userEmail = ldapUtilisateur.Properties["mail"].Value.ToString();
-                        Utilisateur user = new Utilisateur(id, 0, userNom, "02975090013d1741f202efd1262ed14c", userEmail);
+                        Utilisateur user = new Utilisateur(0, 0, userNom, "02975090013d1741f202efd1262ed14c", userEmail);
                         listeUtilisateurs.Add(user);
-                        id++;
+                    }
+                    ldapServeur.Close();
+
+                    if (listeUtilisateurs.Count > 0)
+                    {
+                        // Connection à la base de données
+                        MySqlConnection bddConnection = new MySqlConnection("SERVER=" + configuration.lire("mysql", "host", "localhost") +
+                            ";DATABASE=" + configuration.lire("mysql", "database", "mrbs") + ";UID=" + configuration.lire("mysql", "user", "mrbs") +
+                            ";PASSWORD=" + configuration.lire("mysql", "password", "mrbs"));
+
+                        // Nettoyer la BDD
+                        bddConnection.Open();
+                        MySqlCommand bddCommandeNettoyage = new MySqlCommand("DELETE * FROM mrbs_users", bddConnection);
+                        bddCommandeNettoyage.ExecuteNonQuery();
+
+                        bddConnection.Close();
                     }
                 }
                 catch (Exception erreur)
