@@ -14,9 +14,9 @@ namespace ServiceSynchronisation
         static void Main()
         {
             ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[] 
-            { 
-                new ServiceMain() 
+            ServicesToRun = new ServiceBase[]
+            {
+                new ServiceMain()
             };
             ServiceBase.Run(ServicesToRun);
         }

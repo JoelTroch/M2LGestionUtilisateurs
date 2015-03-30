@@ -18,10 +18,12 @@ namespace ServiceSynchronisation
 
         protected override void OnStart(string[] args)
         {
+            base.OnStart(args);
         }
 
         protected override void OnStop()
         {
+            base.Stop();
         }
     }
 }
