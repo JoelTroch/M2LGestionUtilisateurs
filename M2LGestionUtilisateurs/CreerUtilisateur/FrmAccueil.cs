@@ -43,9 +43,9 @@ namespace CreerUtilisateur
                     user.Properties["SAMAccountName"].Add(login); //Login
                     user.Properties["mail"].Add(email); //Email
                     user.CommitChanges();
-                    //user.Invoke("SetPassword", new object[] { motDePasse }); //MotDePasse
-                    user.Properties["userAccountControl"].Value = 0x0020;
-                    //user.Properties["userAccountControl"].Value = 0x0200;
+                    user.Invoke("SetPassword", new object[] { motDePasse }); //Mot de passe
+                    //user.Properties["userAccountControl"].Value = 0x0020;
+                    user.Properties["userAccountControl"].Value = 0x0200;
                     user.CommitChanges();
                     MessageBox.Show("Ajout à l'AD avec succès.", "Succès", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
