@@ -57,9 +57,15 @@ namespace ServiceSynchronisation
                     SearchResultCollection ldapResultat = ldapRecherche.FindAll();
 
                     // Pour chaque utilisateur dans le LDAP
+                    int id = 0;
                     foreach (SearchResult ldapUtilisateurActuel in ldapResultat)
                     {
                         DirectoryEntry ldapUtilisateur = ldapUtilisateurActuel.GetDirectoryEntry();
+                        string userNom = ldapUtilisateur.Properties["SAMAccountName"].Value.ToString();
+                        string userEmail = ldapUtilisateur.Properties["mail"].Value.ToString();
+                        Utilisateur user = new Utilisateur(id, 0, userNom, "02975090013d1741f202efd1262ed14c", userEmail);
+                        listeUtilisateurs.Add(user);
+                        id++;
                     }
                 }
                 catch (Exception erreur)
